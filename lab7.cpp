@@ -9,7 +9,7 @@ using namespace std;
 class Signal { 
 	private:
 		int len;
-		int max_val;
+		double max_val;
 		double avg_val;
 		double *data;
 		int isAlloc;
@@ -25,7 +25,7 @@ class Signal {
 		void statistics(void);
 		// Additional
 		void Sig_info(void);
-		void Save_file(const char *);
+		void Save_file(const char *filename);
 		// Constructors
 		Signal();
 		Signal(int fileno);
@@ -34,6 +34,19 @@ class Signal {
 		~Signal();
 };
 
+void Signal::Save_file(const char *filename) {
+	FILE *fp_w = fopen(filename, "w");
+	if(fp_w != NULL)
+	{	
+		fprintf(fp_w, "%d %0.4lf\n", len, max_val);
+		for(int i=0; i<len; i++)
+		{
+			fprintf(fp_w, "%0.4lf\n", *(data+i));
+		}
+		fclose(fp_w);
+	}
+}
+	
 void Signal::offset(double offset_val) {
 	int i=0;
 	// Update data array
@@ -123,7 +136,7 @@ void Signal::populate(const char *filename) {
 	}
 	else
 	{
-		fscanf(fp_r, "%d %d", &len, &max_val);
+		fscanf(fp_r, "%d %lf", &len, &max_val);
 		// allocate memory for signal
 		data = new double[len];
 		isAlloc = 1;
