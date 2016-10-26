@@ -12,7 +12,6 @@ class Signal {
 		double max_val;
 		double avg_val;
 		double *data;
-		int isAlloc;
 		void populate(const char *);
 		void getAverage(void);
 		void getMax(void);
@@ -23,6 +22,7 @@ class Signal {
 		void center(void);
 		void normalize(void);
 		void statistics(void);
+		void menu(void);
 		// Additional
 		void Sig_info(void);
 		void Save_file(const char *filename);
@@ -33,6 +33,82 @@ class Signal {
 		// Destructor
 		~Signal();
 };
+
+void print_help(char **argv) {
+	cout << "Usage is: " << argv[0] << "[ -f <filename> ] or [ -n <file_number> ]" << endl;
+	cout << "With no arguments uses filename Raw_data_01.txt" << endl;
+	exit(EXIT_FAILURE);
+}
+
+void Signal::menu(void) {
+	while(1)
+	{
+//	menu (offset, scale, center, normalize, statistic)
+//		(print signal, save signal, exit)
+		cout << "1) Offset " << endl;
+		cout << "2) Scale" << endl;
+		cout << "3) Center" << endl;
+		cout << "4) Normalize" << endl;
+		cout << "5) Statistics" << endl;
+		cout << "6) Print Signal" << endl;
+		cout << "7) Save Signal" << endl;
+		cout << "8) Exit" << endl;
+		cout << "Select an option: ";
+		int opt;
+		cin >> opt;
+		switch(opt)
+		{
+			case 1: { 	cout << "Enter the offset value: ";
+					double val;
+					cin >> val;
+					offset(val);
+					break;
+				}
+			default: 
+					 cout << "Invalid option" << endl; break;
+		}
+	}
+}
+
+				 
+
+int main(int argc, char **argv) {
+	
+	/* Handle command line args */
+	if(argc == 2)
+		print_help(argv);
+
+	if(argc > 2)
+	{
+		if(!(strcmp(argv[1], "-f")))
+		{
+			// Call constructor with filename
+			Signal sig1 = Signal(argv[2]);
+			sig1.Sig_info();
+			sig1.menu();
+		}
+		else if(!(strcmp(argv[1], "-n")))
+		{
+			// Call constructor with number arg
+			// E.g. 2 => Raw_data_02.txt
+			Signal sig1 = Signal(atoi(argv[2]));
+			sig1.Sig_info();
+			sig1.menu();
+		}
+	}
+	else {
+		// No cmd line arguments, call default constructor
+		Signal sig1 = Signal();
+		sig1.Sig_info();
+		sig1.menu();
+	}
+	
+	
+	return 0;	
+}
+
+
+
 
 void Signal::Save_file(const char *filename) {
 	FILE *fp_w = fopen(filename, "w");
@@ -105,18 +181,6 @@ void Signal::statistics(void) {
 	//getMax();
 }
 
-int main(void) {
-	/* Handle command line args */
-	// If no switches prompt user for input
-	Signal sig1 = Signal();
-	sig1.Sig_info();
-
-//	menu (offset, scale, center, normalize, statistic)
-//		(print signal, save signal, exit)
-
-	return 0;
-}
-
 void Signal::Sig_info(void) {
 /* Display length, current maximum, current average */
 	cout << "Signal length: " << len << endl;
@@ -132,14 +196,12 @@ void Signal::populate(const char *filename) {
 	if(fp_r == NULL)
 	{
 		cout << "Error opening file" << endl;
-		isAlloc = 0;
 	}
 	else
 	{
 		fscanf(fp_r, "%d %lf", &len, &max_val);
 		// allocate memory for signal
 		data = new double[len];
-		isAlloc = 1;
 		int i=0;
 		for(i=0; i<len; i++)
 		{
@@ -192,8 +254,5 @@ Signal::Signal(const char *filename) {
 
 Signal::~Signal() {
 	// Free memory allocated at runtime
-	if(isAlloc)
-	{
-		delete[] data;
-	}
+	delete[] data;
 }
