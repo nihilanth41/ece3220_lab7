@@ -43,9 +43,7 @@ void print_help(char **argv) {
 void Signal::menu(void) {
 	while(1)
 	{
-//	menu (offset, scale, center, normalize, statistic)
-//		(print signal, save signal, exit)
-		cout << "1) Offset " << endl;
+		cout << "\n1) Offset " << endl;
 		cout << "2) Scale" << endl;
 		cout << "3) Center" << endl;
 		cout << "4) Normalize" << endl;
@@ -58,14 +56,42 @@ void Signal::menu(void) {
 		cin >> opt;
 		switch(opt)
 		{
-			case 1: { 	cout << "Enter the offset value: ";
+			case 1: { 	cout << "\nEnter the offset value: ";
 					double val;
 					cin >> val;
 					offset(val);
 					break;
 				}
-			default: 
-					 cout << "Invalid option" << endl; break;
+			case 2: { 	cout << "\nEnter the scale value: ";
+				        double val;
+					cin >> val;
+					scale(val);
+					break; 
+				}
+			case 3: { 	center(); 
+					break;	
+				}
+			case 4: { 	normalize();
+					break;
+				}
+			case 5: {	statistics();
+					break;
+				}
+			case 6: {	Sig_info();
+					break;
+				}
+			case 7:	{	cout << "Enter a filename: ";
+					char *output_file = new char[32];
+					cin >> output_file;
+					Save_file(output_file);
+					break;
+				}
+			case 8: {
+					exit(EXIT_SUCCESS);
+				}
+			default: { 	 cout << "Invalid option" << endl; 
+					 break;
+				 }
 		}
 	}
 }
@@ -177,13 +203,13 @@ void Signal::normalize(void) {
 }
 
 void Signal::statistics(void) {
-	//getAverage();
-	//getMax();
+	cout << "\nAverage: " << avg_val << endl;
+	cout << "Max value: " << max_val << endl;
 }
 
 void Signal::Sig_info(void) {
 /* Display length, current maximum, current average */
-	cout << "Signal length: " << len << endl;
+	cout << "\nSignal length: " << len << endl;
 	cout << "Maximum val:" << max_val << endl;
 	cout << "Average val:" << avg_val << endl;
 }
