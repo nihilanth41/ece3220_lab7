@@ -84,6 +84,7 @@ void Signal::menu(void) {
 					char *output_file = new char[32];
 					cin >> output_file;
 					Save_file(output_file);
+					delete[] output_file;
 					break;
 				}
 			case 8: {
