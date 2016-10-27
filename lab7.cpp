@@ -245,7 +245,7 @@ void Signal::getAverage(void) {
 	{
 		avg_val += *(data+i);
 	}
-	avg_val /= len;
+	avg_val /= (double)len;
 }
 
 void Signal::getMax(void) {
