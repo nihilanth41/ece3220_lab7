@@ -272,10 +272,14 @@ Signal::Signal(int fileno) {
 	char filename[32];
 	sprintf(filename, "Raw_data_%02d.txt", fileno);
 	populate(filename);
+	getAverage();
+	getMax();
 }
 
 Signal::Signal(const char *filename) {
 	populate(filename);
+	getAverage();
+	getMax();
 }
 
 Signal::~Signal() {
